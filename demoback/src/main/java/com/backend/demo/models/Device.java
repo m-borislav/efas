@@ -1,11 +1,18 @@
 package com.backend.demo.models;
 
+import lombok.*;
+
 import javax.persistence.*;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
 @Entity
+@Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Device {
 
     @Id
@@ -15,9 +22,9 @@ public class Device {
     private String place;
     @Column(name = "deviceType", nullable = false, length = 50)
     private String deviceType;
-
-    @OneToMany(mappedBy = "device", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Measuring> measuringSet;
+    private double amperage;
+    private double pressure;
+    private double wetness;
 
 /*    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="deviceType_id", unique = true, nullable = false, updatable = false)
@@ -25,46 +32,6 @@ public class Device {
 
     @ManyToOne(targetEntity = Equipment.class)
     private Equipment equipment;
-
-    public String getDeviceType() {
-        return Optional.ofNullable(deviceType).orElse("");
-    }
-
-    public void setDeviceType(String deviceType) {
-        this.deviceType = deviceType;
-    }
-
-    public Equipment getEquipment() {
-        return equipment;
-    }
-
-    public void setEquipment(Equipment equipment) {
-        this.equipment = equipment;
-    }
-
-    public Set<Measuring> getMeasuringSet() {
-        return measuringSet;
-    }
-
-    public void setMeasuringSet(Set<Measuring> measuringSet) {
-        this.measuringSet = measuringSet;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getPlace() {
-        return Optional.ofNullable(place).orElse("");
-    }
-
-    public void setPlace(String place) {
-        this.place = place;
-    }
 
 
     @Override

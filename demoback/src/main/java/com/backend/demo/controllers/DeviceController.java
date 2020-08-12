@@ -1,6 +1,7 @@
 package com.backend.demo.controllers;
 
 
+import com.backend.demo.dto.DeviceDto;
 import com.backend.demo.models.Device;
 import com.backend.demo.repos.DeviceRepository;
 import com.backend.demo.repos.EquipmentRepository;
@@ -15,12 +16,11 @@ import java.util.List;
 @RestController
 public class DeviceController {
 
-    @Autowired
     private DeviceRepository deviceRepository;
     private DeviceService deviceService;
     private EquipmentRepository equipmentRepository;
 
-
+    @Autowired
     public DeviceController(DeviceRepository deviceRepository, DeviceService deviceService, EquipmentRepository equipmentRepository) {
         this.deviceRepository = deviceRepository;
         this.deviceService = deviceService;
@@ -78,5 +78,11 @@ public class DeviceController {
             return ResponseEntity.ok(device);
         }
 
+    }
+
+    @PostMapping(value = "/device/measuring")
+    public ResponseEntity<Device> addMeasuring(@RequestBody DeviceDto device){
+        deviceService.amperageMeasuring(device);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
