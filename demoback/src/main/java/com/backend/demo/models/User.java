@@ -1,5 +1,10 @@
 package com.backend.demo.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,24 +13,30 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
+@Getter
+@Setter
 @Entity
+@ApiModel(value = "модель юзера")
 public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @ApiModelProperty(value = "имя", example = "Борислав")
     @Column(name = "firstName", nullable = false, length = 32)
     private String firstName;
+    @ApiModelProperty(value = "Фамилия", example = "Марусов")
     @Column(name = "lastName", nullable = false, length = 32)
     private String lastName;
+    @ApiModelProperty(value = "email", example = "example@mail.com")
     @Column(name = "email", nullable = false, unique = true, length = 32)
     private String email;
-
+    @ApiModelProperty(value = "пароль", example = "1л2ор3л2о3")
     @Column(name = "password", nullable = false, unique = true)
     private String password;
-
 
     @Column(name = "token")
     private String token;
@@ -33,11 +44,10 @@ public class User implements UserDetails {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime tokenExpirationDate;
 
-    @ManyToMany
-    @JoinTable(name="user_company",
-            joinColumns = {@JoinColumn(name="user_id")},
-            inverseJoinColumns = {@JoinColumn(name="company_id")})
+    @JsonManagedReference
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Company> companySet;
+
     private boolean isAccountNonExpired;
     private boolean isAccountNonLocked;
     private boolean isCredentialsNonExpired;
@@ -46,14 +56,6 @@ public class User implements UserDetails {
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private List<Role> roles;
-
-    public Set<Company> getCompanySet() {
-        return companySet;
-    }
-
-    public void setCompanySet(Set<Company> companySet) {
-        this.companySet = companySet;
-    }
 
     public Long getId() {
         return id;
@@ -165,5 +167,24 @@ public class User implements UserDetails {
 
     public void setRoles(List<Role> roles) {
         this.roles = roles;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id.equals(user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +  '}';
     }
 }

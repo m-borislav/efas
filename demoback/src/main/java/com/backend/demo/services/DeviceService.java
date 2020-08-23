@@ -1,12 +1,14 @@
 package com.backend.demo.services;
 
-import com.backend.demo.dto.DeviceDto;
 import com.backend.demo.exceptions.DeviceNotFoundException;
 import com.backend.demo.models.Device;
+import com.backend.demo.models.Equipment;
 import com.backend.demo.repos.DeviceRepository;
 import com.backend.demo.repos.EquipmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 @Service
@@ -38,13 +40,7 @@ public class DeviceService {
         return deviceRepository.findByPlace(place);
    }
 
-   public Device amperageMeasuring(DeviceDto newDevice){
-        Device device = Device.builder()
-                .id(null)
-                .amperage(newDevice.getAmperage())
-                .pressure(newDevice.getPressure())
-                .wetness(newDevice.getWetness())
-                .build();
-        return device;
+   public List<Device> findByEquipment(Equipment equipment){
+        return deviceRepository.findByEquipment(equipment);
    }
 }

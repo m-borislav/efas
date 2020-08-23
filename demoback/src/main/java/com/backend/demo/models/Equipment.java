@@ -1,66 +1,44 @@
 package com.backend.demo.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ApiModel(value = "модель оборудования")
 public class Equipment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @ApiModelProperty(value = "название оборудования", example = "какой-то станок")
     @Column(name = "name", nullable = false, length = 50)
     private String name;
+    @ApiModelProperty(value = "локация", example = "первый этаж, комната 666")
     @Column(name = "location", nullable = false, unique = true, length = 50)
     private String location;
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id", nullable = false)
+    @JoinColumn(name = "company_id")
     private Company company;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "equipment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Device> deviceSet;
-
-    public Set<Device> getDeviceSet() {
-        return deviceSet;
-    }
-
-    public void setDeviceSet(Set<Device> deviceSet) {
-        this.deviceSet = deviceSet;
-    }
-
-    public Company getCompany() {
-        return company;
-    }
-
-    public void setCompany(Company company) {
-        this.company = company;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
 
     @Override
     public boolean equals(Object o) {

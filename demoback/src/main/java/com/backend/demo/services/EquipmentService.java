@@ -1,10 +1,13 @@
 package com.backend.demo.services;
 
 import com.backend.demo.exceptions.EquipmentNotFoundException;
+import com.backend.demo.models.Company;
 import com.backend.demo.models.Equipment;
 import com.backend.demo.repos.EquipmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class EquipmentService {
@@ -32,5 +35,10 @@ public class EquipmentService {
 
     public Equipment loadDeviceByLocation(String location) throws EquipmentNotFoundException {
         return equipmentRepository.findByLocation(location);
+    }
+
+
+    public List<Equipment> findByCompany(Company company){
+        return equipmentRepository.findByCompany(company);
     }
 }

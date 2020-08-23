@@ -5,9 +5,11 @@ import com.backend.demo.models.Device;
 import com.backend.demo.models.Equipment;
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.List;
+
 public interface DeviceRepository extends CrudRepository<Device, Long> {
 
-    Device findByEquipmentId(Long equipmentId);
+    List<Device> findByEquipment(Equipment equipment);
 
     Device findByPlace(String place);
 }
